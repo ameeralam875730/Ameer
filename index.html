@@ -2,39 +2,426 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>PRI रेगुलेटर वारंटी · आमिर गैस पॉइंट</title>
-    
-    <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#f97316">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="PRI Warranty">
-    <meta name="mobile-web-app-capable" content="yes">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/96/gas-stove.png">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-    
     <style>
-        /* App-like styling */
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
             background: linear-gradient(135deg, #0a0f1e 0%, #0c1225 50%, #0a0c1a 100%); 
             min-height: 100vh; 
-            font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, sans-serif; 
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif; 
             padding: 20px; 
             color: #f0f3fa;
             position: relative;
             overflow-x: hidden;
         }
-        /* ... rest of your existing styles ... */
+        /* Animated background particles effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(rgba(255, 100, 50, 0.08) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
+            100% { transform: translateY(-20px) rotate(5deg); opacity: 1; }
+        }
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(249, 115, 22, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+        }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .glass-card { 
+            background: rgba(12, 18, 34, 0.85); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(249, 115, 22, 0.25); 
+            border-radius: 32px; 
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05); 
+            transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            animation: fadeSlideUp 0.5s ease-out;
+        }
+        .glass-card:hover { border-color: rgba(249, 115, 22, 0.5); transform: translateY(-3px); }
+        .warranty-card { 
+            background: linear-gradient(125deg, rgba(27, 29, 58, 0.95), rgba(18, 21, 46, 0.95)); 
+            border-left: 5px solid #f97316; 
+            border-radius: 24px; 
+            transition: all 0.3s ease;
+            animation: fadeSlideUp 0.4s ease-out;
+        }
+        .warranty-card:hover { transform: translateX(5px) scale(1.01); box-shadow: 0 15px 35px -10px #f97316; }
+        .input-field { 
+            background: rgba(5, 8, 22, 0.8); 
+            border: 2px solid #2a2e55; 
+            border-radius: 24px; 
+            padding: 12px 18px; 
+            color: white; 
+            width: 100%; 
+            outline: none; 
+            transition: all 0.25s ease;
+            font-size: 0.95rem;
+        }
+        .input-field:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2); transform: scale(1.01); }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+        .btn-primary { 
+            background: linear-gradient(95deg, #f97316, #ea580c); 
+            font-weight: 700; 
+            padding: 12px 24px; 
+            border-radius: 40px; 
+            transition: all 0.25s ease; 
+            cursor: pointer; 
+            border: none; 
+            color: white; 
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+        .btn-primary:active::after { width: 200px; height: 200px; opacity: 0; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(249, 115, 22, 0.5); background: linear-gradient(95deg, #fb852c, #f05a0c); }
+        .status-active { background: #10b981; padding: 4px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: bold; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(16,185,129,0.4); }
+        .status-expired { background: #dc2626; padding: 4px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: bold; box-shadow: 0 2px 8px rgba(220,38,38,0.4); }
+        .delete-warranty-btn { 
+            background: rgba(220, 38, 38, 0.15); 
+            border: 1px solid #ef4444; 
+            border-radius: 40px; 
+            padding: 5px 14px; 
+            font-size: 12px; 
+            cursor: pointer; 
+            color: #fecaca;
+            transition: 0.2s;
+        }
+        .delete-warranty-btn:hover { background: #dc2626; color: white; transform: scale(0.96); box-shadow: 0 4px 12px #dc2626; }
+        .flame-icon { filter: drop-shadow(0 0 8px #f97316); animation: float 3s infinite ease-in-out; }
+        .single-flame { filter: drop-shadow(0 0 8px #f97316); animation: float 3s infinite ease-in-out; }
+        .search-tab-active { border-bottom: 3px solid #f97316; color: #fbbf24; background: rgba(249,115,22,0.1); border-radius: 20px 20px 0 0; }
+        @keyframes spin-slow { to { transform: rotate(360deg); } }
+        .animate-spin-slow { animation: spin-slow 1.5s linear infinite; }
+        .ripple-effect { transition: all 0.2s; }
     </style>
 </head>
 <body>
-    <!-- Your existing HTML content -->
+
+<div class="max-w-6xl mx-auto relative z-10">
+    <!-- Header - Only ONE fire icon on left of title -->
+    <div class="flex flex-wrap justify-between items-center mb-8 gap-4 animate-fadeIn">
+        <div class="flex items-center gap-4 bg-black/40 px-6 py-2.5 rounded-full backdrop-blur-md border border-orange-500/30 shadow-xl">
+            <i class="fas fa-fire-flame-curved text-4xl text-orange-500 single-flame"></i>
+            <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-orange-400 via-amber-400 to-yellow-300 bg-clip-text text-transparent">PRI रेगुलेटर वारंटी</h1>
+            <span class="text-xs bg-orange-800/70 px-4 py-1.5 rounded-full font-bold shadow-lg">Aamir Gas Point</span>
+        </div>
+        <div id="userInfo" class="text-sm text-orange-200 bg-black/40 px-5 py-2 rounded-full font-mono backdrop-blur-sm border border-orange-500/30"></div>
+    </div>
+    
+    <div class="text-center mb-6 text-amber-200/90 text-base italic tracking-wide flex items-center justify-center gap-2">
+        <i class="fas fa-shield-alt text-orange-400"></i> आपकी सुरक्षा, हमारी पहचान <i class="fas fa-heart text-red-400 animate-pulse"></i>
+    </div>
+
+    <!-- LOGIN SECTION - Only ONE fire icon above "एडमिन लॉगिन" -->
+    <div id="loginSection" class="glass-card p-8 text-center max-w-md mx-auto mt-10 transition-all duration-500">
+        <div class="flex justify-center mb-4">
+            <i class="fas fa-fire-flame-curved text-5xl text-orange-400 single-flame"></i>
+        </div>
+        <h2 class="text-2xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">एडमिन लॉगिन</h2>
+        <p class="text-xs text-gray-400 mb-6">PRI रेगुलेटर वारंटी प्रबंधन</p>
+        <!-- Pre-filled email field, readonly -->
+        <input type="email" id="logEmail" value="aamirgaspoint@gmail.com" readonly class="input-field mb-4 bg-gray-800/60 cursor-not-allowed text-gray-300 border-gray-600">
+        <input type="password" id="logPass" placeholder="पासवर्ड दर्ज करें" class="input-field mb-6">
+        <button onclick="handleLogin()" class="btn-primary w-full text-lg flex items-center justify-center gap-2 group"><i class="fas fa-unlock-alt group-hover:scale-110 transition"></i> लॉगिन करें</button>
+        <p class="text-[11px] text-gray-500 mt-5">🔒 सुरक्षित फायरबेस कनेक्शन</p>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="appContent" class="hidden space-y-8">
+        <!-- Enhanced Search Card with both methods -->
+        <div class="glass-card p-6 md:p-7 transition-all">
+            <div class="flex items-center gap-3 mb-6">
+                <i class="fas fa-search text-2xl text-orange-400"></i>
+                <h2 class="text-2xl font-bold text-amber-300">ग्राहक वारंटी खोजें</h2>
+            </div>
+            
+            <!-- Mobile Number Search with animation -->
+            <div class="mb-7 bg-black/20 p-4 rounded-2xl">
+                <label class="text-sm text-orange-300 font-medium mb-2 flex items-center gap-2"><i class="fas fa-mobile-alt"></i> मोबाइल नंबर से खोजें</label>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <input type="tel" id="searchMob" placeholder="9876543210" class="input-field flex-1" maxlength="10">
+                    <button onclick="searchByMobile()" class="bg-gradient-to-r from-indigo-600 to-indigo-800 hover:scale-105 transition px-6 rounded-2xl font-semibold shadow-md"><i class="fas fa-search mr-1"></i> खोजें</button>
+                </div>
+            </div>
+
+            <!-- Regulator ID Search -->
+            <div class="border-t border-orange-800/40 pt-5">
+                <label class="text-sm text-orange-300 font-medium mb-2 flex items-center gap-2"><i class="fas fa-id-card"></i> रेगुलेटर ID से खोजें</label>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <input type="text" id="searchRegId" placeholder="REG-1A2B3C" class="input-field flex-1">
+                    <button onclick="searchByRegulatorId()" class="bg-gradient-to-r from-emerald-600 to-emerald-800 hover:scale-105 transition px-6 rounded-2xl font-semibold"><i class="fas fa-microchip mr-1"></i> ID खोजें</button>
+                </div>
+                <p class="text-[11px] text-purple-300 mt-2"><i class="fas fa-info-circle"></i> रेगुलेटर पर मौजूद अद्वितीय ID से सीधे वारंटी देखें</p>
+            </div>
+
+            <div id="searchResult" class="mt-8 space-y-4"></div>
+        </div>
+
+        <!-- Registration Card with Glassmorphism -->
+        <div class="glass-card p-6 md:p-7">
+            <div class="flex items-center gap-3 border-b border-orange-800/60 pb-4 mb-7">
+                <i class="fas fa-file-signature text-2xl text-green-400 animate-bounce"></i>
+                <h2 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-orange-300">नई वारंटी रजिस्ट्रेशन</h2>
+                <span class="text-xs bg-orange-600/40 px-3 py-1 rounded-full backdrop-blur-sm">PRI रेगुलेटर</span>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
+                <div><label class="text-xs text-gray-300 font-semibold">ग्राहक का नाम *</label><input type="text" id="custName" placeholder="पूरा नाम" class="input-field"></div>
+                <div><label class="text-xs text-gray-300 font-semibold">मोबाइल नंबर *</label><input type="tel" id="custPhone" placeholder="9876543210" maxlength="10" class="input-field"></div>
+                
+                <div><label class="text-xs text-gray-300 font-semibold">रेगुलेटर मॉडल</label>
+                    <select id="regModel" class="input-field cursor-pointer">
+                        <option value="PRI INDANE REGULATOR">PRI INDANE REGULATOR</option>
+                        <option value="PRI HP REGULATOR">PRI HP REGULATOR</option>
+                        <option value="PRI BHARAT REGULATOR">PRI BHARAT REGULATOR</option>
+                        <option value="PRI SUPER LPG">PRI SUPER LPG</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="text-xs text-gray-300 font-semibold flex justify-between"><span><i class="fas fa-microchip"></i> CML नंबर *</span>
+                        <button type="button" onclick="generateRandomCML()" class="text-[11px] bg-amber-700/60 hover:bg-amber-600 px-3 py-1 rounded-full transition"><i class="fas fa-dice-d6"></i> रैंडम</button>
+                    </label>
+                    <div class="flex gap-2">
+                        <input type="text" id="cmlNo" placeholder="CML-XXXXX" class="input-field font-mono" value="CML-">
+                        <button onclick="generateRandomCML()" class="bg-gray-700 px-4 rounded-xl hover:bg-gray-600 transition"><i class="fas fa-sync-alt"></i></button>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs text-gray-300 font-semibold"><i class="fas fa-id-card"></i> रेगुलेटर ID *</label>
+                    <input type="text" id="regulatorId" placeholder="मैन्युअल ID (रेगुलेटर पर लिखी)" class="input-field font-mono">
+                </div>
+
+                <div><label class="text-xs text-gray-300 font-semibold">खरीद तिथि *</label><input type="date" id="purchaseDate" class="input-field"></div>
+                <div><label class="text-xs text-gray-300 font-semibold">कीमत (₹)</label><input type="number" id="price" oninput="generateUPIQR()" class="input-field" placeholder="₹ 500"></div>
+            </div>
+
+            <div class="bg-black/40 border border-orange-500/30 rounded-2xl p-4 text-center mb-6 backdrop-blur-sm transition-all hover:border-orange-400">
+                <p class="text-sm mb-2 text-yellow-300 font-bold flex justify-center gap-2"><i class="fab fa-google-pay fa-lg"></i> स्कैन करें & भुगतान (वैकल्पिक)</p>
+                <div id="qrDiv" class="flex justify-center mb-2">
+                    <div class="w-44 h-44 bg-white/5 rounded-2xl flex items-center justify-center text-sm text-gray-400 border border-dashed border-gray-500"><i class="fas fa-qrcode fa-3x text-orange-400"></i></div>
+                </div>
+            </div>
+
+            <button onclick="saveWarrantyToFirebase()" id="saveBtn" class="btn-primary w-full text-lg flex justify-center items-center gap-3 group">
+                <i class="fas fa-cloud-upload-alt group-hover:animate-bounce"></i> वारंटी सेव करें
+            </button>
+        </div>
+        
+        <div class="text-center text-xs text-orange-300/80 flex flex-wrap justify-center gap-5 bg-black/20 p-3 rounded-full backdrop-blur-sm">
+            <span><i class="fas fa-check-circle text-green-400"></i> 6 महीने वारंटी</span>
+            <span><i class="fas fa-fingerprint"></i> CML + Regulator ID ट्रैकिंग</span>
+            <span><i class="fas fa-shield-alt"></i> Aamir Gas Point सुरक्षा</span>
+        </div>
+        
+        <button onclick="handleLogout()" class="text-gray-400 hover:text-orange-300 text-sm transition-all duration-300 flex items-center justify-center gap-2 mx-auto mt-4 mb-8 bg-black/30 px-6 py-2 rounded-full"><i class="fas fa-sign-out-alt"></i> लॉगआउट करें</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, where, getDocs, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDpnU-4eyGMnMurKw-sLd2a1N0wMAxtJ1Y",
+        authDomain: "aamir-gas-v2.firebaseapp.com",
+        projectId: "aamir-gas-v2",
+        storageBucket: "aamir-gas-v2.firebasestorage.app",
+        messagingSenderId: "483238404270",
+        appId: "1:483238404270:web:4b5351611e25f3f8948d3f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.generateRandomCML = function() {
+        let cmlInput = document.getElementById('cmlNo');
+        const randomPart = Math.random().toString(36).substring(2, 10).toUpperCase() + Math.floor(Math.random() * 900);
+        cmlInput.value = `CML-${randomPart}`;
+        cmlInput.classList.add('scale-105'); setTimeout(() => cmlInput.classList.remove('scale-105'), 200);
+    };
+
+    window.generateUPIQR = function() {
+        const amount = document.getElementById('price').value;
+        const qrContainer = document.getElementById('qrDiv');
+        if(amount && parseFloat(amount) > 0) {
+            const upiString = `upi://pay?pa=8294366186-2@ybl&pn=AAMIR%20GAS%20POINT&am=${encodeURIComponent(amount)}&cu=INR`;
+            qrContainer.innerHTML = "";
+            QRCode.toCanvas(upiString, { width: 160, margin: 2, color: { dark: '#ffffff', light: '#00000000' } }, (err, canvas) => {
+                if(!err) { canvas.classList.add("rounded-xl", "shadow-xl", "border", "border-orange-400"); qrContainer.appendChild(canvas); }
+                else qrContainer.innerHTML = "<div class='text-red-400'>QR त्रुटि</div>";
+            });
+        } else {
+            qrContainer.innerHTML = `<div class="w-44 h-44 bg-white/5 rounded-2xl flex items-center justify-center text-sm text-gray-400"><i class="fas fa-qrcode fa-3x text-orange-400"></i></div>`;
+        }
+    };
+
+    // Login with pre-filled email
+    window.handleLogin = async function() {
+        const email = "aamirgaspoint@gmail.com";
+        const pass = document.getElementById('logPass').value.trim();
+        if(!pass) return alert("कृपया पासवर्ड दर्ज करें");
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+        } catch(e) { alert("❌ गलत पासवर्ड या कनेक्टिविटी समस्या"); }
+    };
+
+    onAuthStateChanged(auth, (user) => {
+        if(user) {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('appContent').classList.remove('hidden');
+            document.getElementById('userInfo').innerHTML = `<i class="fas fa-user-cog mr-2"></i> ${user.email} <span class="ml-2 text-green-300 text-[11px]">● ऑनलाइन</span>`;
+            document.getElementById('cmlNo').value = "CML-";
+            document.getElementById('regulatorId').value = "";
+        } else {
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('appContent').classList.add('hidden');
+            document.getElementById('logPass').value = "";
+        }
+    });
+
+    window.saveWarrantyToFirebase = async function() {
+        const name = document.getElementById('custName').value.trim();
+        const phone = document.getElementById('custPhone').value.trim();
+        const purchaseDate = document.getElementById('purchaseDate').value;
+        let cml = document.getElementById('cmlNo').value.trim();
+        const model = document.getElementById('regModel').value;
+        const price = document.getElementById('price').value;
+        const regulatorId = document.getElementById('regulatorId').value.trim();
+
+        if(!name) return alert("❌ नाम भरें");
+        if(!phone || phone.length!==10) return alert("❌ 10 अंकों का मोबाइल नंबर");
+        if(!purchaseDate) return alert("❌ खरीद तिथि चुनें");
+        if(!cml || !cml.startsWith('CML-')) return alert("⚠️ CML नंबर CML- से शुरू होना चाहिए");
+        if(!regulatorId) return alert("⚠️ रेगुलेटर ID अनिवार्य है");
+
+        let expiry = new Date(purchaseDate);
+        expiry.setMonth(expiry.getMonth()+6);
+        const expiryFormatted = expiry.toISOString().split('T')[0];
+
+        try {
+            const btn = document.getElementById('saveBtn');
+            btn.disabled = true; btn.innerHTML = `<i class="fas fa-spinner fa-pulse"></i> प्रोसेसिंग...`;
+            await addDoc(collection(db, "warranties"), {
+                name, phone, model, cmlNumber: cml, regulatorID: regulatorId, price: price||0,
+                purchaseDate, warrantyExpiry: expiryFormatted, createdBy: auth.currentUser?.uid,
+                createdAt: serverTimestamp(), status: "active"
+            });
+            alert("✅ वारंटी रजिस्टर हो गई!");
+            document.getElementById('custName').value = '';
+            document.getElementById('custPhone').value = '';
+            document.getElementById('price').value = '';
+            document.getElementById('purchaseDate').value = '';
+            document.getElementById('regulatorId').value = '';
+            document.getElementById('cmlNo').value = 'CML-';
+            document.getElementById('qrDiv').innerHTML = `<div class="w-44 h-44 bg-white/5 rounded-2xl flex items-center justify-center text-sm text-gray-400"><i class="fas fa-qrcode fa-3x text-orange-400"></i></div>`;
+            btn.disabled = false; btn.innerHTML = `<i class="fas fa-cloud-upload-alt"></i> वारंटी सेव करें`;
+        } catch(err) { alert("Error: "+err.message); document.getElementById('saveBtn').disabled=false; }
+    };
+
+    function renderCards(snapshot, container) {
+        if(snapshot.empty) {
+            container.innerHTML = `<div class="bg-red-900/20 border border-red-500/40 rounded-2xl p-8 text-center backdrop-blur"><i class="fas fa-times-circle text-5xl text-red-400 mb-3"></i><p>कोई वारंटी रिकॉर्ड नहीं मिला</p></div>`;
+            return;
+        }
+        let html = `<div class="space-y-4"><h3 class="text-xl font-bold text-amber-400"><i class="fas fa-clipboard-list"></i> मिले रिकॉर्ड (${snapshot.size})</h3>`;
+        snapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            const docId = docSnap.id;
+            const expiry = data.warrantyExpiry || "N/A";
+            const purchase = data.purchaseDate || "तिथि नहीं";
+            const isExpired = new Date() > new Date(expiry);
+            const statusBadge = isExpired ? `<span class="status-expired"><i class="fas fa-hourglass-end"></i> समाप्त</span>` : `<span class="status-active"><i class="fas fa-check-circle"></i> सक्रिय</span>`;
+            
+            html += `
+                <div class="warranty-card p-5 transition-all duration-300">
+                    <div class="flex flex-wrap justify-between items-start gap-3 border-b border-purple-800/40 pb-3 mb-3">
+                        <div><h3 class="text-lg font-bold text-white">${data.name}</h3><p class="text-xs text-gray-400"><i class="fas fa-phone-alt"></i> ${data.phone}</p></div>
+                        <div class="flex gap-2 items-center">${statusBadge}<button onclick="deleteWarrantyDoc('${docId}')" class="delete-warranty-btn"><i class="fas fa-trash-alt"></i> हटाएं</button></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+                        <div><i class="fas fa-tag text-orange-300"></i> ${data.model || "PRI"}</div>
+                        <div><i class="fas fa-rupee-sign"></i> ₹${data.price || 0}</div>
+                        <div><i class="fas fa-calendar-alt"></i> खरीद: ${purchase}</div>
+                        <div><i class="fas fa-clock"></i> समाप्ति: ${expiry}</div>
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-orange-700/40 text-xs flex flex-wrap gap-4 text-orange-300 font-mono">
+                        <span><i class="fas fa-microchip"></i> CML: <strong class="text-yellow-200">${data.cmlNumber || '—'}</strong></span>
+                        <span><i class="fas fa-id-card"></i> रेगुलेटर ID: <strong class="text-yellow-200">${data.regulatorID || '—'}</strong></span>
+                        <span><i class="fas fa-hourglass-half"></i> समाप्ति: ${expiry}</span>
+                    </div>
+                </div>
+            `;
+        });
+        html += `</div>`;
+        container.innerHTML = html;
+    }
+
+    window.searchByMobile = async function() {
+        const phone = document.getElementById('searchMob').value.trim();
+        const resDiv = document.getElementById('searchResult');
+        if(!phone || phone.length !== 10) { resDiv.innerHTML = `<div class="text-center text-red-400 p-4">10 अंकों का मोबाइल नंबर डालें</div>`; return; }
+        resDiv.innerHTML = `<div class="text-center"><i class="fas fa-spinner fa-spin text-orange-400 text-2xl"></i> खोज जारी...</div>`;
+        const q = query(collection(db, "warranties"), where("phone", "==", phone));
+        const snap = await getDocs(q);
+        renderCards(snap, resDiv);
+    };
+
+    window.searchByRegulatorId = async function() {
+        const regId = document.getElementById('searchRegId').value.trim();
+        const resDiv = document.getElementById('searchResult');
+        if(!regId) { resDiv.innerHTML = `<div class="text-center text-red-400 p-4">रेगुलेटर ID डालें</div>`; return; }
+        resDiv.innerHTML = `<div class="text-center"><i class="fas fa-spinner fa-spin text-orange-400 text-2xl"></i> ID खोज रहे...</div>`;
+        const q = query(collection(db, "warranties"), where("regulatorID", "==", regId));
+        const snap = await getDocs(q);
+        renderCards(snap, resDiv);
+    };
+
+    window.deleteWarrantyDoc = async function(docId) {
+        if(!confirm("⚠️ स्थायी रूप से हटाना है?")) return;
+        await deleteDoc(doc(db, "warranties", docId));
+        alert("✅ वारंटी हटाई गई");
+        const mob = document.getElementById('searchMob').value;
+        const rid = document.getElementById('searchRegId').value;
+        if(mob && mob.length===10) searchByMobile();
+        else if(rid) searchByRegulatorId();
+        else document.getElementById('searchResult').innerHTML = `<div class="text-gray-400 p-4 text-center">रिकॉर्ड हटा दिया गया</div>`;
+    };
+
+    window.handleLogout = async () => { await signOut(auth); };
+</script>
 </body>
 </html>
