@@ -278,7 +278,7 @@
         const amount = document.getElementById('price').value;
         const qrContainer = document.getElementById('qrDiv');
         if(amount && parseFloat(amount) > 0) {
-            const upiString = `upi://pay?pa=8294366186-2@ybl&pn=AAMIR%20GAS%20POINT&am=${encodeURIComponent(amount)}&cu=INR`;
+            const upiString = `upi://pay?pa=7209076462-2@ybl&pn=AAMIR%20GAS%20POINT&am=${encodeURIComponent(amount)}&cu=INR`;
             qrContainer.innerHTML = "";
             QRCode.toCanvas(upiString, { width: 160, margin: 2, color: { dark: '#ffffff', light: '#00000000' } }, (err, canvas) => {
                 if(!err) { canvas.classList.add("rounded-xl", "shadow-xl", "border", "border-orange-400"); qrContainer.appendChild(canvas); }
